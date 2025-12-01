@@ -1,0 +1,11 @@
+// Connect to database
+var db = connect("mysql://user:pass@localhost/db")
+var orders = db.query("SELECT * FROM orders WHERE status = 'shipped'")
+
+// Create ML model
+var frame = h2o.frame(orders)
+var model = h2o.automl(frame, "is_return")
+
+// Deploy as API
+var endpoint = deploy(model, "http://localhost:8080/predict")
+print("Model deployed at: ${endpoint.url}")
