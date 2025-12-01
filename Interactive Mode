@@ -1,0 +1,5 @@
+# Start CherryScript REPL
+cherryscript -i
+
+# Run a script
+cherryscript examples/demo.cherry
