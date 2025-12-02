@@ -1,0 +1,385 @@
+Requirements - CherryScript
+🏗️ System Requirements
+Minimum Requirements
+Python: 3.7 or higher
+
+RAM: 1GB minimum, 2GB recommended
+
+Disk Space: 100MB free space
+
+OS: Windows 10+, macOS 10.14+, or Linux (Ubuntu 18.04+, Fedora 30+, etc.)
+
+Recommended for Data Science Workloads
+RAM: 8GB or more (16GB for large datasets)
+
+CPU: 4+ cores for ML operations
+
+Storage: 1GB+ for model files and datasets
+
+Python Packages: As specified below
+
+📦 Python Package Dependencies
+Core Dependencies (Automatically installed)
+These are required for basic CherryScript functionality:
+
+bash
+
+Copy
+
+Download
+# CherryScript will automatically install these:
+pymysql>=1.0.0      # Database connectivity (with fallback mock)
+pandas>=1.3.0       # Data manipulation and frame operations
+numpy>=1.21.0       # Numerical operations and array support
+Optional Dependencies (Install as needed)
+For Machine Learning (H2O AutoML)
+bash
+
+Copy
+
+Download
+# Advanced ML capabilities
+pip install h2o>=3.36.0           # AutoML and machine learning framework
+pip install scikit-learn>=1.0.0   # Additional ML algorithms (optional)
+For Model Deployment
+bash
+
+Copy
+
+Download
+# API deployment and serving
+pip install fastapi>=0.68.0       # REST API framework for model deployment
+pip install uvicorn>=0.15.0       # ASGI server for API hosting
+pip install pydantic>=1.9.0       # Data validation for API endpoints
+For Advanced Analytics
+bash
+
+Copy
+
+Download
+# Extended data science capabilities
+pip install scipy>=1.7.0          # Scientific computing
+pip install matplotlib>=3.5.0     # Data visualization
+pip install seaborn>=0.11.0       # Statistical data visualization
+For Database Connectivity
+bash
+
+Copy
+
+Download
+# Additional database support
+pip install psycopg2>=2.9.0       # PostgreSQL support
+pip install sqlalchemy>=1.4.0     # SQL toolkit and ORM
+pip install sqlite3               # Built-in (no installation needed)
+For Web Scraping & APIs
+bash
+
+Copy
+
+Download
+# External data acquisition
+pip install requests>=2.27.0      # HTTP client for API calls
+pip install beautifulsoup4>=4.10.0 # HTML parsing
+pip install lxml>=4.7.0           # XML/HTML processing
+Development Dependencies
+bash
+
+Copy
+
+Download
+# For contributing to CherryScript development
+pip install pytest>=7.0.0         # Testing framework
+pip install pytest-cov>=4.0.0     # Test coverage
+pip install black>=22.0.0         # Code formatting
+pip install flake8>=6.0.0         # Code linting
+pip install mypy>=1.0.0           # Type checking
+pip install pre-commit>=3.0.0     # Git hooks
+pip install mkdocs>=1.4.0         # Documentation
+pip install mkdocs-material>=9.0.0 # Documentation theme
+🚀 Quick Installation
+Basic Installation
+bash
+
+Copy
+
+Download
+# Install CherryScript core
+pip install cherryscript
+
+# Verify installation
+cherryscript --version
+Full Installation (All Features)
+bash
+
+Copy
+
+Download
+# Install with all optional dependencies
+pip install "cherryscript[all]"
+
+# Or install feature sets
+pip install "cherryscript[ml]"      # Machine learning features
+pip install "cherryscript[deploy]"  # Model deployment features
+pip install "cherryscript[dev]"     # Development tools
+Development Installation
+bash
+
+Copy
+
+Download
+# Clone the repository
+git clone https://github.com/yourusername/cherryscript.git
+cd cherryscript
+
+# Install in development mode
+pip install -e ".[dev]"
+
+# Run tests
+pytest tests/
+
+# Check code quality
+black cherryscript/
+flake8 cherryscript/
+mypy cherryscript/
+💾 Database Requirements
+Supported Databases
+MySQL/MariaDB: 5.7+ (via pymysql)
+
+PostgreSQL: 10+ (via psycopg2, optional)
+
+SQLite: 3.8+ (built-in)
+
+Mock Database: Built-in for testing/demo
+
+Database Setup
+bash
+
+Copy
+
+Download
+# MySQL example
+sudo apt install mysql-server mysql-client  # Ubuntu/Debian
+brew install mysql                          # macOS
+
+# PostgreSQL example
+sudo apt install postgresql postgresql-contrib  # Ubuntu/Debian
+brew install postgresql                       # macOS
+🤖 Machine Learning Requirements
+For H2O AutoML
+Java: JDK 8+ required for H2O
+
+Memory: Minimum 4GB RAM, 8GB+ recommended
+
+Storage: 2GB+ for model storage
+
+Java Installation
+bash
+
+Copy
+
+Download
+# Ubuntu/Debian
+sudo apt install openjdk-11-jdk
+
+# macOS
+brew install openjdk@11
+
+# Windows
+# Download from: https://adoptium.net/
+🌐 Deployment Requirements
+For Model Serving
+Port Availability: 8080 (default) or custom port
+
+Network Access: For external API calls (optional)
+
+SSL Certificates: For HTTPS deployment (production)
+
+Production Deployment
+bash
+
+Copy
+
+Download
+# Install production dependencies
+pip install gunicorn>=20.0.0      # WSGI server (alternative to uvicorn)
+pip install python-multipart>=0.0.5 # File upload support
+
+# For HTTPS
+pip install python-jose>=3.3.0    # JWT support
+pip install passlib>=1.7.4        # Password hashing
+🔧 Platform-Specific Notes
+Windows
+cmd
+
+Copy
+
+Download
+# Install Python 3.8+ from python.org
+# Ensure "Add Python to PATH" is checked
+
+# Install build tools
+pip install wheel setuptools
+
+# Install CherryScript
+pip install cherryscript
+macOS
+bash
+
+Copy
+
+Download
+# Install Python via Homebrew
+brew install python@3.9
+
+# Set Python path (if needed)
+echo 'export PATH="/usr/local/opt/python@3.9/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+# Install CherryScript
+pip3 install cherryscript
+Linux (Ubuntu/Debian)
+bash
+
+Copy
+
+Download
+# Install Python 3.9+
+sudo apt update
+sudo apt install python3.9 python3-pip python3-venv
+
+# Create virtual environment
+python3 -m venv cherryenv
+source cherryenv/bin/activate
+
+# Install CherryScript
+pip install cherryscript
+Linux (Fedora/RHEL)
+bash
+
+Copy
+
+Download
+# Install Python 3.9+
+sudo dnf install python3.9 python3-pip
+
+# Install CherryScript
+pip3 install cherryscript
+📊 Version Compatibility
+CherryScript	Python	H2O	FastAPI	Status
+1.0.x	3.7-3.11	3.36+	0.68+	✅ Fully Supported
+1.0.x	3.6	3.36+	0.68+	⚠️ Limited Support
+1.0.x	< 3.6	-	-	❌ Not Supported
+🧪 Testing Your Setup
+After installation, run these commands to verify everything works:
+
+bash
+
+Copy
+
+Download
+# Check installation
+cherryscript --version
+
+# Run the demo script
+cherryscript examples/demo.cherry
+
+# Start interactive mode
+cherryscript -i
+
+# Test ML features (if H2O installed)
+cherryscript examples/ml_pipeline.cherry
+
+# Test deployment (if FastAPI installed)
+cherryscript -c "deploy(mock_model, 'http://localhost:9999/predict')"
+🔄 Upgrading
+bash
+
+Copy
+
+Download
+# Upgrade to latest version
+pip install --upgrade cherryscript
+
+# Upgrade with all dependencies
+pip install --upgrade "cherryscript[all]"
+
+# Check for outdated packages
+pip list --outdated
+❓ Troubleshooting
+Common Issues
+"ModuleNotFoundError: No module named 'pymysql'"
+
+bash
+
+Copy
+
+Download
+# Reinstall with dependencies
+pip install --force-reinstall cherryscript
+H2O Java Errors
+
+bash
+
+Copy
+
+Download
+# Set JAVA_HOME
+export JAVA_HOME=$(/usr/libexec/java_home)  # macOS
+# or
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk  # Linux
+
+# Verify Java installation
+java -version
+Port Already in Use
+
+bash
+
+Copy
+
+Download
+# Change deployment port
+deploy(model, "http://localhost:9090/predict")
+
+# Or find and kill the process
+lsof -ti:8080 | xargs kill -9  # Linux/macOS
+netstat -ano | findstr :8080   # Windows
+Database Connection Issues
+
+javascript
+
+Copy
+
+Download
+// In CherryScript, use connection parameters:
+var db = connect("mysql://user:pass@localhost:3306/db?ssl=true&charset=utf8")
+Getting Help
+Check GitHub Issues
+
+Join Discord Community
+
+Email: support@cherryscript.dev
+
+🔐 Security Requirements
+For Production Use
+SSL/TLS: Always use HTTPS in production
+
+Authentication: Implement API keys or OAuth for deployed models
+
+Input Validation: Sanitize all user inputs
+
+Environment Variables: Store secrets in .env files, not in code
+
+Security Packages
+bash
+
+Copy
+
+Download
+# Production security
+pip install python-dotenv>=0.20.0  # Environment variable management
+pip install cryptography>=36.0.0   # Encryption
+pip install bcrypt>=3.2.0          # Password hashing
+📝 License Requirements
+CherryScript is MIT Licensed - free for personal, educational, and commercial use. No special licenses required.
+
+✨ Ready to automate your data workflows? Install CherryScript today and start building! 🚀
