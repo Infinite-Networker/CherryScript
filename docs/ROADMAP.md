@@ -2,33 +2,6 @@ CherryScript Roadmap 2024-2025
 🎯 Vision Statement
 Transform CherryScript from a powerful prototype into the go-to scripting language for data science automation, making complex ML pipelines accessible to everyone through simple, intuitive syntax.
 
-📅 Timeline Overview
-
-timeline
-    title CherryScript Development Timeline
-    section Q1 2024 (Current)
-        v1.0.0 Release : Core Language
-        Basic ML Integration : H2O AutoML
-        Database Adapters : MySQL, PostgreSQL
-    section Q2 2024
-        Package Ecosystem : Plugin System
-        Enhanced IDE Support : VS Code Extension
-        Cloud Integration : AWS, GCP, Azure
-    section Q3 2024
-        Performance v2.0 : Just-In-Time Compilation
-        Advanced ML : PyTorch/TensorFlow Bridge
-        Web Assembly : Browser Runtime
-    section Q4 2024
-        Enterprise v3.0 : Team Collaboration
-        Monitoring : Built-in Observability
-        Production : Load Balancing
-    section Q1 2025
-        AI Assistant : Code Generation
-        Multi-Language : TypeScript/Python Bridge
-        Education : Interactive Learning Platform
-        
-CherryScript Development Timeline
-
 🚀 Phase 1: Core Stabilization (Q1 2024)
 Status: In Progress ✅
 
@@ -464,5 +437,6 @@ Governance Model: Community-driven with a technical steering committee. Major de
 
 Last Updated: January 2024
 Next Review: April 2024
+
 
 
