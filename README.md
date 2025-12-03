@@ -1,3 +1,7 @@
+![image alt
+](https://github.com/Infinite-Networker/CherryScript/blob/99fa77311dc5afc74f816fd962bf337c77434deb/Adobe%20Express%20-%20file%20(7).png)
+
+
 # CherryScript
 A programming language for automated data collection, processing, and AI program creation
 
