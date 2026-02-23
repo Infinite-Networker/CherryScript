@@ -14,7 +14,7 @@
 print("=== SECTION 1: VARIABLES AND DATA TYPES ===")
 
 // Basic variable declarations
-var company_name = "CherryTech Inc."
+var company_name = "Cherry Computer Ltd."
 let year_founded = 2023
 var revenue_growth = 15.8  // percentage
 var is_public = false
