@@ -1,0 +1,169 @@
+// =============================================================================
+// CherryScript Example: Model Deployment Walkthrough
+// deploy_api.cherry — Version 1.0.0
+//
+// Demonstrates the full lifecycle of deploying a CherryScript model:
+//   1. Train a quick model
+//   2. Deploy as a FastAPI endpoint
+//   3. Simulate API calls
+//   4. Monitor endpoint health
+//   5. Graceful teardown
+// =============================================================================
+
+print("╔══════════════════════════════════════════════════╗")
+print("║   CherryScript — Model Deployment Walkthrough 🚀 ║")
+print("╚══════════════════════════════════════════════════╝")
+print("")
+
+// ─────────────────────────────────────────────
+// STEP 1 — Quick model training
+// ─────────────────────────────────────────────
+print("📦 STEP 1: Preparing & training model...")
+
+var training_data = [
+    { "sqft": 1200, "bedrooms": 2, "age_years": 15, "price": 320000 },
+    { "sqft": 1800, "bedrooms": 3, "age_years": 8,  "price": 480000 },
+    { "sqft": 900,  "bedrooms": 1, "age_years": 30, "price": 210000 },
+    { "sqft": 2400, "bedrooms": 4, "age_years": 5,  "price": 650000 },
+    { "sqft": 1500, "bedrooms": 3, "age_years": 12, "price": 395000 },
+    { "sqft": 3000, "bedrooms": 5, "age_years": 2,  "price": 890000 },
+    { "sqft": 1100, "bedrooms": 2, "age_years": 20, "price": 275000 },
+    { "sqft": 2200, "bedrooms": 4, "age_years": 7,  "price": 580000 }
+]
+
+var frame = h2o.frame(training_data)
+var model = h2o.automl(frame, "price")
+
+print("  ✓ Model trained:", model.name)
+print("  ✓ Type         :", model.model_type)
+print("")
+
+// ─────────────────────────────────────────────
+// STEP 2 — Export model code
+// ─────────────────────────────────────────────
+print("📤 STEP 2: Exporting model wrappers...")
+
+export to python
+print("  ✓ Python wrapper generated: model_server.py")
+
+export to java
+print("  ✓ Java wrapper generated : ModelPredictor.java")
+
+print("")
+
+// ─────────────────────────────────────────────
+// STEP 3 — Deploy REST API
+// ─────────────────────────────────────────────
+print("🚀 STEP 3: Deploying REST API...")
+print("")
+
+var host     = "0.0.0.0"
+var port     = 8080
+var endpoint = deploy(model, `http://${host}:${port}/predict`)
+
+print("  ┌──────────────────────────────────────────────────┐")
+print("  │  ✅  API LIVE                                     │")
+print("  │                                                    │")
+print("  │  Predict  POST  http://", host, ":", port, "/predict    │")
+print("  │  Health   GET   http://", host, ":", port, "/health     │")
+print("  │  Docs     GET   http://", host, ":", port, "/docs       │")
+print("  └──────────────────────────────────────────────────┘")
+print("")
+
+// ─────────────────────────────────────────────
+// STEP 4 — Simulate API calls
+// ─────────────────────────────────────────────
+print("🔄 STEP 4: Simulating API requests...")
+print("")
+
+var test_properties = [
+    { "sqft": 1600, "bedrooms": 3, "age_years": 10 },
+    { "sqft": 2800, "bedrooms": 5, "age_years": 3  },
+    { "sqft": 950,  "bedrooms": 1, "age_years": 25 }
+]
+
+var predictions = model.predict(h2o.frame(test_properties))
+
+print("  Property Valuations:")
+print("  ─────────────────────────────────────────────────────")
+
+for i in range(len(test_properties)) {
+    let prop = test_properties[i]
+    let pred = predictions[i] if i < len(predictions) else { "prediction": 0, "confidence": 0 }
+    let price_band = ""
+
+    if (pred["prediction"] > 600000) {
+        price_band = "🏰 Luxury"
+    } else if (pred["prediction"] > 350000) {
+        price_band = "🏠 Mid-Range"
+    } else {
+        price_band = "🏡 Starter"
+    }
+
+    print("")
+    print(`  Property ${i+1}:`)
+    print("    Input  →  sqft:", prop["sqft"],
+          "| bedrooms:", prop["bedrooms"],
+          "| age:", prop["age_years"], "yrs")
+    print("    Output →  Estimated price: $", pred["prediction"],
+          "| Band:", price_band)
+    print("              Confidence:", pred.get("confidence", "N/A"))
+}
+
+// ─────────────────────────────────────────────
+// STEP 5 — Health monitoring simulation
+// ─────────────────────────────────────────────
+print("")
+print("🩺 STEP 5: Health check simulation...")
+print("")
+
+var check_count = 3
+let pass_count  = 3   // all checks pass in this demo
+
+for i in range(check_count) {
+    let status = "healthy"
+    let latency_ms = 12 + (i * 3)
+    print(`  [Check ${i+1}] GET ${endpoint.url.replace("/predict", "/health")}`)
+    print(`          → Status: ${status} ✅  | Latency: ${latency_ms}ms`)
+}
+
+print("")
+print("  ✓", pass_count, "/", check_count, "health checks passed")
+
+// ─────────────────────────────────────────────
+// STEP 6 — Graceful shutdown
+// ─────────────────────────────────────────────
+print("")
+print("🛑 STEP 6: Graceful teardown...")
+print("")
+
+// Note: Uncomment to actually shutdown in a live environment
+// undeploy(endpoint, 5.0)
+
+print("  → Sending SIGTERM to API process...")
+print("  → Waiting for in-flight requests to complete...")
+print("  → Closing database connections...")
+print("  ✅ API gracefully shut down")
+
+// ─────────────────────────────────────────────
+// DEPLOYMENT SUMMARY
+// ─────────────────────────────────────────────
+print("")
+print("══════════════════════════════════════════════════")
+print("  🍒 Deployment Walkthrough Complete!")
+print("")
+print("  Model        :", model.name)
+print("  Endpoint     :", endpoint.url)
+print("  Properties   :", len(test_properties), "valued")
+print("  Health checks: PASS")
+print("  Teardown     : READY")
+print("══════════════════════════════════════════════════")
+print("")
+print("  📘 API Usage:")
+print("")
+print("  curl -X POST http://0.0.0.0:8080/predict \\")
+print("       -H 'Content-Type: application/json' \\")
+print("       -d '{\"rows\": [{\"sqft\": 2000, \"bedrooms\": 3, \"age_years\": 10}]}'")
+print("")
+print("  # Response:")
+print("  # { \"predictions\": [{ \"prediction\": 520000, \"confidence\": 0.91 }] }")

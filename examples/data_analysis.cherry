@@ -1,0 +1,213 @@
+// =============================================================================
+// CherryScript Example: Business Intelligence & Data Analysis
+// data_analysis.cherry — Version 1.0.0
+//
+// Demonstrates CherryScript's data analysis capabilities:
+//   - Sales trend analysis
+//   - Customer segmentation
+//   - Revenue forecasting
+//   - KPI dashboards
+//   - Cohort-style breakdowns
+// =============================================================================
+
+print("╔══════════════════════════════════════════════╗")
+print("║  CherryScript Business Intelligence Demo 📊  ║")
+print("╚══════════════════════════════════════════════╝")
+print("")
+
+// ─────────────────────────────────────────────
+// DATASET: Simulated annual sales data
+// ─────────────────────────────────────────────
+var monthly_sales = [
+    { "month": "Jan", "revenue": 185000, "orders": 340, "returns": 12 },
+    { "month": "Feb", "revenue": 172000, "orders": 310, "returns": 9  },
+    { "month": "Mar", "revenue": 210000, "orders": 395, "returns": 15 },
+    { "month": "Apr", "revenue": 230000, "orders": 420, "returns": 18 },
+    { "month": "May", "revenue": 245000, "orders": 445, "returns": 14 },
+    { "month": "Jun", "revenue": 260000, "orders": 480, "returns": 20 },
+    { "month": "Jul", "revenue": 235000, "orders": 430, "returns": 16 },
+    { "month": "Aug", "revenue": 250000, "orders": 460, "returns": 17 },
+    { "month": "Sep", "revenue": 270000, "orders": 495, "returns": 19 },
+    { "month": "Oct", "revenue": 290000, "orders": 530, "returns": 22 },
+    { "month": "Nov", "revenue": 350000, "orders": 640, "returns": 28 },
+    { "month": "Dec", "revenue": 380000, "orders": 700, "returns": 35 }
+]
+
+var customer_segments = [
+    { "segment": "Enterprise",  "count": 45,   "avg_clv": 125000, "renewal_rate": 0.94 },
+    { "segment": "Mid-Market",  "count": 280,  "avg_clv": 28000,  "renewal_rate": 0.86 },
+    { "segment": "SMB",         "count": 1450, "avg_clv": 5500,   "renewal_rate": 0.72 },
+    { "segment": "Freemium",    "count": 9800, "avg_clv": 0,      "renewal_rate": 0.15 }
+]
+
+// ─────────────────────────────────────────────
+// SECTION 1 — Annual KPIs
+// ─────────────────────────────────────────────
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("  SECTION 1: Annual KPI Dashboard")
+print("━━━━━━━━━━────────────────────────━━━━━━━━━━")
+print("")
+
+var total_revenue = 0
+var total_orders  = 0
+var total_returns = 0
+var best_month    = monthly_sales[0]
+var worst_month   = monthly_sales[0]
+
+for m in monthly_sales {
+    total_revenue = total_revenue + m["revenue"]
+    total_orders  = total_orders  + m["orders"]
+    total_returns = total_returns + m["returns"]
+
+    if (m["revenue"] > best_month["revenue"]) {
+        best_month = m
+    }
+    if (m["revenue"] < worst_month["revenue"]) {
+        worst_month = m
+    }
+}
+
+let avg_monthly_revenue = total_revenue / len(monthly_sales)
+let avg_order_value     = total_revenue / total_orders
+let return_rate         = (total_returns / total_orders) * 100
+
+print("  💰 Total Annual Revenue  : $", total_revenue)
+print("  📦 Total Orders          :", total_orders)
+print("  🔁 Total Returns         :", total_returns)
+print("  📈 Avg Monthly Revenue   : $", format(avg_monthly_revenue, ".0f"))
+print("  🛒 Avg Order Value       : $", format(avg_order_value, ".2f"))
+print("  ↩️  Return Rate           :", format(return_rate, ".1f"), "%")
+print("  🏆 Best Month            :", best_month["month"], "— $", best_month["revenue"])
+print("  📉 Slowest Month         :", worst_month["month"], "— $", worst_month["revenue"])
+
+// ─────────────────────────────────────────────
+// SECTION 2 — Month-over-Month Trends
+// ─────────────────────────────────────────────
+print("")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("  SECTION 2: Monthly Revenue Trend (ASCII)")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("")
+
+var peak = best_month["revenue"]
+var bar_max = 30
+
+for m in monthly_sales {
+    let bars     = (m["revenue"] / peak) * bar_max
+    let bar_str  = ""
+    let i = 0
+    while (i < bars) {
+        bar_str = bar_str + "█"
+        i = i + 1
+    }
+    let mom_arrow = ""
+    print(" ", m["month"], "|", bar_str, "$", m["revenue"])
+}
+
+// ─────────────────────────────────────────────
+// SECTION 3 — Customer Segmentation
+// ─────────────────────────────────────────────
+print("")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("  SECTION 3: Customer Segmentation Analysis")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("")
+
+var total_clv = 0
+for seg in customer_segments {
+    let seg_clv = seg["count"] * seg["avg_clv"]
+    total_clv = total_clv + seg_clv
+
+    let renewal_pct = seg["renewal_rate"] * 100
+    print(" ", seg["segment"])
+    print("    Customers     :", seg["count"])
+    print("    Avg CLV       : $", seg["avg_clv"])
+    print("    Segment CLV   : $", seg_clv)
+    print("    Renewal Rate  :", format(renewal_pct, ".0f"), "%")
+    print("")
+}
+
+print("  🎯 Total Portfolio CLV: $", total_clv)
+
+// ─────────────────────────────────────────────
+// SECTION 4 — Revenue Forecasting (12 months)
+// ─────────────────────────────────────────────
+print("")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("  SECTION 4: 12-Month Revenue Forecast")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("")
+
+fn forecast_revenue(base, growth_pct, periods) {
+    var results = []
+    var rev = base
+    for i in range(periods) {
+        rev = rev * (1 + growth_pct / 100)
+        results.append({ "period": i + 1, "projected_revenue": rev })
+    }
+    return results
+}
+
+var optimistic  = forecast_revenue(total_revenue, 18, 12)
+var realistic   = forecast_revenue(total_revenue, 10, 12)
+var conservative = forecast_revenue(total_revenue, 5, 12)
+
+var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+print("  Month | Conservative (5%) | Realistic (10%) | Optimistic (18%)")
+print("  ──────┼───────────────────┼─────────────────┼─────────────────")
+for i in range(12) {
+    let mn = month_names[i]
+    let c  = format(conservative[i]["projected_revenue"] / 12, ".0f")
+    let r  = format(realistic[i]["projected_revenue"] / 12, ".0f")
+    let o  = format(optimistic[i]["projected_revenue"] / 12, ".0f")
+    print(" ", mn, "  |  $", c, "           |  $", r, "        |  $", o)
+}
+
+// ─────────────────────────────────────────────
+// SECTION 5 — Alerts & Insights
+// ─────────────────────────────────────────────
+print("")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("  SECTION 5: Automated Insights & Alerts")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("")
+
+// Return rate alert
+if (return_rate > 5) {
+    print("  ⚠️  ALERT: Return rate is", format(return_rate, ".1f"),
+          "% — above 5% threshold. Investigate product quality.")
+} else {
+    print("  ✅ Return rate is healthy at", format(return_rate, ".1f"), "%")
+}
+
+// Q4 performance
+let q4_revenue = monthly_sales[9]["revenue"] + monthly_sales[10]["revenue"] + monthly_sales[11]["revenue"]
+let q4_share   = (q4_revenue / total_revenue) * 100
+if (q4_share > 35) {
+    print("  ⚠️  INSIGHT: Q4 represents", format(q4_share, ".1f"),
+          "% of annual revenue — high seasonality risk.")
+} else {
+    print("  ✅ Revenue is distributed healthily across quarters.")
+}
+
+// Enterprise focus recommendation
+let enterprise_seg = customer_segments[0]
+let ent_clv_total  = enterprise_seg["count"] * enterprise_seg["avg_clv"]
+let ent_share      = (ent_clv_total / total_clv) * 100
+print("  📌 Enterprise (", enterprise_seg["count"], "customers) generates",
+      format(ent_share, ".1f"), "% of total CLV.")
+print("     Renewal rate:", format(enterprise_seg["renewal_rate"] * 100, ".0f"),
+      "% — prioritise executive relationship management.")
+
+// Freemium conversion opportunity
+let freemium = customer_segments[3]
+print("  💡 Freemium pool:", freemium["count"],
+      "users at", format(freemium["renewal_rate"] * 100, ".0f"),
+      "% conversion. Even 5% → SMB = +", freemium["count"] * 5 / 100, "new paid customers.")
+
+print("")
+print("══════════════════════════════════════════════")
+print("  🍒 Business Intelligence Report Complete!")
+print("══════════════════════════════════════════════")
