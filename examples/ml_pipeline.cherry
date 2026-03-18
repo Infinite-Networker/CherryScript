@@ -1,0 +1,170 @@
+// =============================================================================
+// CherryScript Example: End-to-End ML Pipeline
+// ml_pipeline.cherry — Version 1.0.0
+//
+// Demonstrates a complete machine learning workflow:
+//   1. Load data from a MySQL database
+//   2. Preprocess with H2O
+//   3. Train an AutoML churn-prediction model
+//   4. Evaluate and display the leaderboard
+//   5. Predict on unseen data
+//   6. Deploy as a REST endpoint
+// =============================================================================
+
+print("╔══════════════════════════════════════════╗")
+print("║   CherryScript ML Pipeline Demo   🍒     ║")
+print("╚══════════════════════════════════════════╝")
+print("")
+
+// ─────────────────────────────────────────────
+// STEP 1 — Connect to data source
+// ─────────────────────────────────────────────
+print("📦 STEP 1: Loading customer data from database...")
+
+var db = connect("mysql://analyst:secret@localhost/crm_db")
+
+var raw_data = db.query(`
+    SELECT
+        customer_id,
+        age,
+        tenure_months,
+        monthly_spend,
+        support_tickets,
+        satisfaction_score,
+        churned
+    FROM customers
+    WHERE signup_date >= '2022-01-01'
+`)
+
+print("  ✓ Loaded", len(raw_data), "customer records")
+
+// Fallback mock data if DB unavailable
+if (len(raw_data) == 0) {
+    print("  ⚠️  No DB — using synthetic demo data")
+    raw_data = [
+        { "age": 22, "tenure_months": 3,  "monthly_spend": 25.0,  "support_tickets": 4, "satisfaction_score": 2, "churned": 1 },
+        { "age": 35, "tenure_months": 24, "monthly_spend": 85.0,  "support_tickets": 0, "satisfaction_score": 5, "churned": 0 },
+        { "age": 28, "tenure_months": 12, "monthly_spend": 50.0,  "support_tickets": 2, "satisfaction_score": 3, "churned": 0 },
+        { "age": 45, "tenure_months": 36, "monthly_spend": 120.0, "support_tickets": 1, "satisfaction_score": 4, "churned": 0 },
+        { "age": 19, "tenure_months": 1,  "monthly_spend": 15.0,  "support_tickets": 6, "satisfaction_score": 1, "churned": 1 },
+        { "age": 31, "tenure_months": 18, "monthly_spend": 95.0,  "support_tickets": 0, "satisfaction_score": 5, "churned": 0 },
+        { "age": 26, "tenure_months": 6,  "monthly_spend": 35.0,  "support_tickets": 3, "satisfaction_score": 2, "churned": 1 },
+        { "age": 52, "tenure_months": 48, "monthly_spend": 200.0, "support_tickets": 0, "satisfaction_score": 5, "churned": 0 }
+    ]
+    print("  ✓ Synthetic dataset ready —", len(raw_data), "records")
+}
+
+// ─────────────────────────────────────────────
+// STEP 2 — Feature analysis
+// ─────────────────────────────────────────────
+print("")
+print("📊 STEP 2: Feature Analysis...")
+
+var churned_count    = 0
+var retained_count   = 0
+var total_spend      = 0
+var total_tickets    = 0
+
+for row in raw_data {
+    if (row["churned"] == 1) {
+        churned_count = churned_count + 1
+    } else {
+        retained_count = retained_count + 1
+    }
+    total_spend   = total_spend   + row["monthly_spend"]
+    total_tickets = total_tickets + row["support_tickets"]
+}
+
+let churn_rate  = (churned_count  / len(raw_data)) * 100
+let avg_spend   = total_spend   / len(raw_data)
+let avg_tickets = total_tickets / len(raw_data)
+
+print("  Total records  :", len(raw_data))
+print("  Churned        :", churned_count, format(`(${churn_rate:.1f}%)`))
+print("  Retained       :", retained_count)
+print("  Avg spend      : $", format(avg_spend, ".2f"), "/month")
+print("  Avg support    :", format(avg_tickets, ".1f"), "tickets")
+
+// ─────────────────────────────────────────────
+// STEP 3 — Build H2O frame & train AutoML
+// ─────────────────────────────────────────────
+print("")
+print("🤖 STEP 3: Training AutoML Churn Model...")
+
+var frame  = h2o.frame(raw_data)
+var pframe = h2o.preprocess(frame)
+var model  = h2o.automl(pframe, "churned")
+
+print("  ✓ Model training complete!")
+print("  Model name :", model.name)
+print("  Model type :", model.model_type)
+
+// Show leaderboard
+if (len(model.leaderboard) > 0) {
+    print("")
+    print("  🏆 AutoML Leaderboard:")
+    for i in range(min(5, len(model.leaderboard))) {
+        let entry  = model.leaderboard[i]
+        let medal  = "  "
+        if (i == 0) { medal = "🥇" }
+        else if (i == 1) { medal = "🥈" }
+        else if (i == 2) { medal = "🥉" }
+        print(" ", medal, i+1, "|", entry["model_id"],
+              "| AUC:", entry.get("auc", "N/A"))
+    }
+}
+
+// ─────────────────────────────────────────────
+// STEP 4 — Predict on new customers
+// ─────────────────────────────────────────────
+print("")
+print("🔮 STEP 4: Predicting churn risk on new customers...")
+
+var new_customers = [
+    { "age": 24, "tenure_months": 2,  "monthly_spend": 20.0,  "support_tickets": 5, "satisfaction_score": 1 },
+    { "age": 40, "tenure_months": 30, "monthly_spend": 150.0, "support_tickets": 0, "satisfaction_score": 5 },
+    { "age": 29, "tenure_months": 8,  "monthly_spend": 60.0,  "support_tickets": 2, "satisfaction_score": 3 }
+]
+
+var predictions = model.predict(h2o.frame(new_customers))
+
+print("")
+print("  Customer Risk Assessment:")
+print("  ─────────────────────────────────────────────────────────")
+for i in range(len(new_customers)) {
+    let c    = new_customers[i]
+    let pred = predictions[i] if i < len(predictions) else { "prediction": "N/A", "confidence": 0 }
+    let risk_label = "HIGH RISK ⚠️ " if pred["prediction"] == 1 else "LOW RISK  ✅"
+    print(`  Customer ${i+1} | Age ${c["age"]} | Spend $${c["monthly_spend"]}/mo | Tickets: ${c["support_tickets"]}`)
+    print(`           → ${risk_label} | Confidence: ${pred.get("confidence", "N/A")}`)
+}
+
+// ─────────────────────────────────────────────
+// STEP 5 — Export & Deploy
+// ─────────────────────────────────────────────
+print("")
+print("🚀 STEP 5: Deploying churn prediction API...")
+
+export to python
+
+var endpoint = deploy(model, "http://0.0.0.0:8080/predict")
+
+print("")
+print("  ╔─────────────────────────────────────────────────╗")
+print("  ║  ✅  Churn Prediction API is LIVE!              ║")
+print("  ║                                                  ║")
+print("  ║  POST  http://0.0.0.0:8080/predict              ║")
+print("  ║  GET   http://0.0.0.0:8080/health               ║")
+print("  ╚─────────────────────────────────────────────────╝")
+
+// ─────────────────────────────────────────────
+// SUMMARY
+// ─────────────────────────────────────────────
+print("")
+print("══════════════════════════════════════════")
+print("  🍒 ML Pipeline Complete!")
+print("  Records processed  :", len(raw_data))
+print("  Churn rate         :", format(churn_rate, ".1f"), "%")
+print("  Model              :", model.name)
+print("  API endpoint       :", endpoint.url)
+print("══════════════════════════════════════════")
