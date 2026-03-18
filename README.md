@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- Banner -->
-<img src="https://github.com/Infinite-Networker/CherryScript/blob/67b1d33104b4689e918433ccf99e49d76500fbf9/Resize%20image%20project.png" alt="CherryScript Banner" width="720"/>
+<img src="https://github.com/Infinite-Networker/CherryScript/blob/67b1d33104b4689e918433ccf99e49d76500fbf9/Resize%20image%20project.png" alt="CherryScript Banner" width="420"/>
 
 <br/>
 
