@@ -19,7 +19,6 @@
 [![Status](https://img.shields.io/badge/Status-Active-00C853?style=for-the-badge&logo=statuspage&logoColor=white)](https://github.com/Infinite-Networker/CherryScript)
 
 <!-- Badges Row 2 -->
-[![CI](https://img.shields.io/github/actions/workflow/status/Infinite-Networker/CherryScript/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI)](https://github.com/Infinite-Networker/CherryScript/actions)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-FF69B4?style=for-the-badge&logo=github&logoColor=white)](./CONTRIBUTING.md)
 [![Stars](https://img.shields.io/github/stars/Infinite-Networker/CherryScript?style=for-the-badge&logo=starship&logoColor=white&color=FFD700)](https://github.com/Infinite-Networker/CherryScript/stargazers)
 [![Issues](https://img.shields.io/github/issues/Infinite-Networker/CherryScript?style=for-the-badge&logo=github&logoColor=white&color=FF6B6B)](https://github.com/Infinite-Networker/CherryScript/issues)
