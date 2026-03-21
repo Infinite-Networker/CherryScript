@@ -17,6 +17,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-E91E8C?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](./LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.0.0-FF6B9D?style=for-the-badge&logo=semver&logoColor=white)](./CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Active-00C853?style=for-the-badge&logo=statuspage&logoColor=white)](https://github.com/Infinite-Networker/CherryScript)
+[![Made by](https://img.shields.io/badge/Made%20by-Cherry%20Computer%20Ltd.-e8003d?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PC9zdmc+&logoColor=white)](#-cherry-computer-ltd)
 
 <!-- Badges Row 2 -->
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-FF69B4?style=for-the-badge&logo=github&logoColor=white)](./CONTRIBUTING.md)
